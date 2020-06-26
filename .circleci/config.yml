@@ -1,32 +1,37 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 1
+version: 2
+
 jobs:
-  build:
+  # The test job
+  test:
+    working_directory: ~/reop
     docker:
-      - image: circleci/node:10.14-browsers
-
-    working_directory: ~/repo
-
+      - image: circleci/node:10-browsers
     steps:
+      # Checkout the code from the branch into the working_directory
       - checkout
-
-      # Download and cache dependencies
+      # Log the current branch
+      - run:
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+      # Restore local dependencies from cache
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
-
-      - run: npm install
-      - run: echo 'y' | sudo npm install -g @angular/cli
-
+      # Install project dependencies
+      - run:
+          name: Install local dependencies
+          command: npm install
+      # Cache local dependencies if they don't exist
       - save_cache:
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      # run tests!
-      - run: xvfb-run -a ng test --watch=false --browsers=ChromeNoSandbox
+      # Lint the source code
+      - run:
+          name: Linting
+          command: npm run lint
+      # Test the source code
+      - run:
+          name: Testing
+          command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
