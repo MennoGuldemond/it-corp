@@ -23,4 +23,4 @@ import { MaterialModule } from '../material/material.module';
     FlexLayoutModule
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

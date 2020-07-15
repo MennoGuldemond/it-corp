@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, on, Action } from '@ngrx/store';
 import { GameActions } from './game.actions';
 import { GameSpeed } from '../../models/game-constants';
 
@@ -12,7 +12,7 @@ export const initialState: GameState = {
   gameSpeed: GameSpeed.X1,
 };
 
-export const _gameReducer = createReducer(
+export const gameReducer = createReducer(
   initialState,
   on(GameActions.nextDay, (state) => {
     const tommorow = new Date(state.date);
@@ -30,6 +30,6 @@ export const _gameReducer = createReducer(
   })
 );
 
-export function reducer(state: GameState | undefined, action) {
-  return _gameReducer(state, action);
+export function reducer(state: GameState | undefined, action: Action): GameState {
+  return gameReducer(state, action);
 }
