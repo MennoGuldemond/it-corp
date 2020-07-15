@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { StoreModule } from '@ngrx/store';
 
 import { GameComponent } from './game.component';
+import * as fromGame from './store/game.reducer';
 
 describe('GameComponent', () => {
   let component: GameComponent;
@@ -8,9 +10,11 @@ describe('GameComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GameComponent ]
-    })
-    .compileComponents();
+      declarations: [GameComponent],
+      imports: [
+        StoreModule.forRoot(fromGame.reducer),
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
